@@ -5,8 +5,7 @@ A Home Assistant Lovelace power flow card. It is a fork of
 [@flixlix](https://github.com/flixlix), based on upstream **v0.3.7**.
 
 
-This is a card edited mostly with various AI tools, I love the flixlix power flow card but wanted to separate some feeds - so I can have devices on Henley blocks or second consumer units show my total grid u
-se but not confuse what my home appliances are using. If you get any use out of it great. If you want the original, far better, far more supported version stick with flixlix.
+This is a card edited mostly with various AI tools, I love the flixlix power flow card but wanted to separate some feeds - so I can have devices on Henley blocks or second consumer units show my total grid use but not confuse what my home appliances are using. If you get any use out of it great. If you want the original, far better, far more supported version stick with flixlix.
 
 
 
