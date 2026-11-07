@@ -1,3 +1,5 @@
+import { shapeSchema } from "./_schema-base";
+
 // Visual editor fields for `entities.second_feed`. Its devices (`individual`) are edited with
 // the individual devices editor below this form.
 export const secondFeedSchema = [
@@ -17,6 +19,7 @@ export const secondFeedSchema = [
     schema: [
       { name: "name", label: "Name", selector: { text: {} } },
       { name: "icon", label: "Icon", selector: { icon: {} } },
+      shapeSchema,
       { name: "color", label: "Color", selector: { color_rgb: {} } },
       {
         name: "decimals",

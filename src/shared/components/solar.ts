@@ -9,6 +9,7 @@ import { displayValue } from "@flixlix-cards/shared/utils/display-value";
 import { isNumberValue } from "@flixlix-cards/shared/utils/utils";
 import { html, nothing } from "lit";
 import { generalSecondarySpan } from "./spans/general-secondary-span";
+import { shapeClass } from "@flixlix-cards/shared/const/shapes";
 
 export const solarElement = (
   main: CardMainContext,
@@ -49,7 +50,7 @@ export const solarElement = (
   return html`<div class="circle-container solar">
     <span class="label">${solar.name}</span>
     <div
-      class="circle ${disableEntityClick ? "pointer-events-none" : ""}"
+      class="circle ${disableEntityClick ? "pointer-events-none" : ""} ${shapeClass(config.entities.solar)}"
       @click=${(e: MouseEvent) => {
         main.onEntityClick(e, solar, solar.entity);
       }}

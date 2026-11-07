@@ -12,6 +12,7 @@ import { styleLine } from "@flixlix-cards/shared/utils/style-line";
 import { html, nothing, svg } from "lit";
 import { spacer } from "./spacer";
 import { individualSecondarySpan } from "./spans/individual-secondary-span";
+import { shapeClass } from "@flixlix-cards/shared/const/shapes";
 
 interface TopIndividual {
   newDur: NewDur;
@@ -33,7 +34,7 @@ export const individualLeftTopElement = (
   return html`<div class="circle-container individual-top">
     <span class="label">${individualObj.name}</span>
     <div
-      class="circle ${disableEntityClick ? "pointer-events-none" : ""}"
+      class="circle ${disableEntityClick ? "pointer-events-none" : ""} ${shapeClass(individualObj.field)}"
       @click=${(e: MouseEvent) => {
         main.onEntityClick(e, individualObj?.field, individualObj?.entity);
       }}

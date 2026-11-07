@@ -2,11 +2,15 @@
 // combined entities ("sensor.a|sensor.b") summed with per-entity unit conversion.
 import { describe, expect, test, vi } from "vitest";
 
+import { CIRCLE_CIRCUMFERENCE } from "@flixlix-cards/shared/const/circle";
+import { getShape, SHAPES, shapeClass, shapeStyles } from "@flixlix-cards/shared/const/shapes";
 import { getSecondFeedObject } from "@flixlix-cards/shared/states/raw/second-feed";
 import { isAboveTolerance } from "@flixlix-cards/shared/states/tolerance/base";
 import { isEntityAvailable } from "@flixlix-cards/shared/states/utils/existence-entity";
 import { getEntityStateWatts } from "@flixlix-cards/shared/states/utils/get-entity-state-watts";
 import { type PowerFlowCardPlusConfig } from "@flixlix-cards/shared/types";
+import { getBaseMainConfigSchema } from "@flixlix-cards/shared/ui-editor/schema/_schema-base";
+import { secondFeedSchema } from "@flixlix-cards/shared/ui-editor/schema/second-feed";
 import { type HomeAssistant } from "custom-card-helpers";
 import { PowerFlowCardPlus } from "../src/sr-powerflow-card";
 
@@ -203,5 +207,97 @@ describe("card", () => {
     });
     expect(root.querySelector(".second-feed")).toBeNull();
     expect(root.querySelector(".second-feed-devices")).toBeNull();
+  });
+});
+
+describe("shapes", () => {
+  test("are opt-in: no shape, circle or an unknown name keep the circle", () => {
+    expect(shapeClass(undefined)).toBe("");
+    expect(shapeClass({})).toBe("");
+    expect(shapeClass({ shape: "circle" })).toBe("");
+    expect(shapeClass({ shape: "spaceship" })).toBe("");
+    expect(shapeClass({ shape: "house" })).toBe("shape shape-house");
+    expect(getShape({ shape: "car" })).toBe(SHAPES.car);
+  });
+
+  test("generate a mask and a click-ripple clip for every shape", () => {
+    const cssText = shapeStyles.cssText;
+    for (const [name, { outline }] of Object.entries(SHAPES)) {
+      const mask = cssText.match(new RegExp(`\\.circle\\.shape-${name} \\{\\s*--shape-mask: url\\("data:image/svg\\+xml,([^"]+)"\\)`));
+      expect(mask, name).not.toBeNull();
+      expect(decodeURIComponent(mask![1]!)).toContain(outline);
+      expect(cssText).toContain(`clip-path: path("${outline}")`);
+    }
+  });
+
+  test("every outline is one closed path through the four line connection points", () => {
+    for (const { outline } of Object.values(SHAPES)) {
+      expect(outline.match(/M/gi)).toHaveLength(1);
+      expect(outline.trim().endsWith("Z")).toBe(true);
+    }
+  });
+
+  test("can be picked in the editor for every entity and the second feed", () => {
+    const names = (schema: { schema: { name?: string }[] }) => schema.schema.map((f) => f.name);
+    expect(names(getBaseMainConfigSchema())).toContain("shape");
+    expect(names(getBaseMainConfigSchema("grid"))).toContain("shape");
+    const grid = secondFeedSchema.find((f) => "schema" in f) as { schema: { name?: string }[] };
+    expect(names(grid)).toContain("shape");
+  });
+
+  const mount = async (entities: PowerFlowCardPlusConfig["entities"], states: States) => {
+    const card = document.createElement("sr-powerflow-card") as PowerFlowCardPlus;
+    card.setConfig(makeConfig(entities));
+    card.hass = makeHass(states);
+    document.body.appendChild(card);
+    await card.updateComplete;
+    return card.shadowRoot!;
+  };
+
+  test("draw the chosen entities as shapes and leave the rest as circles", async () => {
+    const root = await mount(
+      {
+        grid: { entity: "sensor.grid", shape: "car" },
+        solar: { entity: "sensor.solar" },
+        individual: [{ entity: "sensor.ev", name: "EV", shape: "car" }],
+      } as PowerFlowCardPlusConfig["entities"],
+      {
+        "sensor.grid": { state: "800", unit: "W" },
+        "sensor.solar": { state: "400", unit: "W" },
+        "sensor.ev": { state: "300", unit: "W" },
+      }
+    );
+    expect(root.querySelector(".grid .circle")!.classList.contains("shape-car")).toBe(true);
+    expect(root.querySelector(".solar .circle")!.classList.contains("shape")).toBe(false);
+    expect(root.querySelector(".individual-top .circle")!.classList.contains("shape-car")).toBe(
+      true
+    );
+  });
+
+  test("draw the home's source split along its shape", async () => {
+    const root = await mount(
+      {
+        grid: { entity: "sensor.grid" },
+        home: { shape: "house" },
+      } as PowerFlowCardPlusConfig["entities"],
+      { "sensor.grid": { state: "800", unit: "W" } }
+    );
+    const home = root.querySelector("#home-circle")!;
+    expect(home.classList.contains("shape-house")).toBe(true);
+    const segments = home.querySelectorAll(".home-circle-sections path");
+    expect(segments.length).toBeGreaterThan(0);
+    for (const segment of segments) {
+      expect(segment.getAttribute("d")).toBe(SHAPES.house.outline);
+      expect(Number(segment.getAttribute("pathLength"))).toBeCloseTo(CIRCLE_CIRCUMFERENCE);
+    }
+    expect(home.querySelector(".home-circle-sections circle")).toBeNull();
+  });
+
+  test("keep the home's circle when no shape is set", async () => {
+    const root = await mount({ grid: { entity: "sensor.grid" } } as PowerFlowCardPlusConfig["entities"], {
+      "sensor.grid": { state: "800", unit: "W" },
+    });
+    expect(root.querySelector(".home-circle-sections circle")).not.toBeNull();
+    expect(root.querySelector(".home-circle-sections path")).toBeNull();
   });
 });

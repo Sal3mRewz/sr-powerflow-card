@@ -8,6 +8,7 @@ import {
 } from "@flixlix-cards/shared/types";
 import { html, nothing, svg } from "lit";
 import { generalSecondarySpan } from "./spans/general-secondary-span";
+import { getShape, shapeClass } from "@flixlix-cards/shared/const/shapes";
 
 interface Home {
   home: any;
@@ -50,10 +51,34 @@ export const homeElement = (
   const isClickable = isHomeEntityDefined || staticAction;
   const disableEntityClick = config.clickable_entities === false || !isClickable;
 
+  // The coloured split of where the home's power comes from is drawn around the circle, or
+  // along the outline of the home's shape. pathLength makes a shape's outline measure the same
+  // as the circle, so the same segment lengths work for both.
+  const shape = getShape(entities.home);
+  const ringSegment = (className: string, dashArray: string, dashOffset: string) =>
+    shape
+      ? svg`<path
+          class=${className}
+          d=${shape.outline}
+          pathLength=${CIRCLE_CIRCUMFERENCE}
+          stroke-dasharray=${dashArray}
+          stroke-dashoffset=${dashOffset}
+          shape-rendering="geometricPrecision"
+        />`
+      : svg`<circle
+          class=${className}
+          cx="40"
+          cy="40"
+          r="38"
+          stroke-dasharray=${dashArray}
+          stroke-dashoffset=${dashOffset}
+          shape-rendering="geometricPrecision"
+        />`;
+
   return html`
     <div class="circle-container home">
       <div
-        class="circle ${disableEntityClick ? "pointer-events-none" : ""}"
+        class="circle ${disableEntityClick ? "pointer-events-none" : ""} ${shapeClass(config.entities.home)}"
         id="home-circle"
         @click=${(e: MouseEvent) => {
           main.onEntityClick(e, entities.home, entities.home?.entity);
@@ -82,60 +107,42 @@ export const homeElement = (
         ${homeUsageToDisplay}
         <svg class="home-circle-sections">
           ${homeSolarCircumference !== undefined
-            ? svg`<circle
-                  class="solar"
-                  cx="40"
-                  cy="40"
-                  r="38"
-                  stroke-dasharray="${homeSolarCircumference} ${CIRCLE_CIRCUMFERENCE -
-                  homeSolarCircumference}"
-                  shape-rendering="geometricPrecision"
-                  stroke-dashoffset="-${CIRCLE_CIRCUMFERENCE - homeSolarCircumference}"
-                />`
+            ? ringSegment(
+                "solar",
+                `${homeSolarCircumference} ${CIRCLE_CIRCUMFERENCE - homeSolarCircumference}`,
+                `-${CIRCLE_CIRCUMFERENCE - homeSolarCircumference}`
+              )
             : nothing}
           ${homeBatteryCircumference
-            ? svg`<circle
-                  class="battery"
-                  cx="40"
-                  cy="40"
-                  r="38"
-                  stroke-dasharray="${homeBatteryCircumference} ${CIRCLE_CIRCUMFERENCE -
-                  homeBatteryCircumference}"
-                  stroke-dashoffset="-${CIRCLE_CIRCUMFERENCE -
-                  homeBatteryCircumference -
-                  (homeSolarCircumference || 0)}"
-                  shape-rendering="geometricPrecision"
-                />`
+            ? ringSegment(
+                "battery",
+                `${homeBatteryCircumference} ${CIRCLE_CIRCUMFERENCE - homeBatteryCircumference}`,
+                `-${CIRCLE_CIRCUMFERENCE - homeBatteryCircumference - (homeSolarCircumference || 0)}`
+              )
             : nothing}
           ${homeNonFossilCircumference !== undefined
-            ? svg`<circle
-                  class="low-carbon"
-                  cx="40"
-                  cy="40"
-                  r="38"
-                  stroke-dasharray="${homeNonFossilCircumference} ${CIRCLE_CIRCUMFERENCE -
-                  homeNonFossilCircumference}"
-                  stroke-dashoffset="-${CIRCLE_CIRCUMFERENCE -
-                  homeNonFossilCircumference -
-                  (homeBatteryCircumference || 0) -
-                  (homeSolarCircumference || 0)}"
-                  shape-rendering="geometricPrecision"
-                />`
+            ? ringSegment(
+                "low-carbon",
+                `${homeNonFossilCircumference} ${CIRCLE_CIRCUMFERENCE - homeNonFossilCircumference}`,
+                `-${CIRCLE_CIRCUMFERENCE -
+                homeNonFossilCircumference -
+                (homeBatteryCircumference || 0) -
+                (homeSolarCircumference || 0)}`
+              )
             : nothing}
-          <circle
-            class="grid"
-            cx="40"
-            cy="40"
-            r="38"
-            stroke-dasharray="${homeGridCircumference ??
+          ${ringSegment(
+            "grid",
+            `${homeGridCircumference ??
             CIRCLE_CIRCUMFERENCE -
               homeSolarCircumference! -
               (homeBatteryCircumference || 0)} ${homeGridCircumference !== undefined
               ? CIRCLE_CIRCUMFERENCE - homeGridCircumference
-              : homeSolarCircumference! + (homeBatteryCircumference || 0)}"
-            stroke-dashoffset="0"
-            shape-rendering="geometricPrecision"
-          />
+              : homeSolarCircumference! + (homeBatteryCircumference || 0)}`,
+            "0"
+          )}
+          ${shape?.decoration
+            ? svg`<path class="shape-decoration" d=${shape.decoration} />`
+            : nothing}
         </svg>
       </div>
       ${!showHomeLabel

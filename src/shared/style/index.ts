@@ -1,3 +1,4 @@
+import { shapeStyles } from "@flixlix-cards/shared/const/shapes";
 import { css } from "lit";
 
 export { allDynamicStyles } from "./all";
@@ -682,4 +683,6 @@ export const styles = css`
   .pointer-events-none {
     pointer-events: none;
   }
+
+  ${shapeStyles}
 `;

@@ -7,6 +7,7 @@ import {
 import { displayValue } from "@flixlix-cards/shared/utils/display-value";
 import { html, nothing } from "lit";
 import { generalSecondarySpan } from "./spans/general-secondary-span";
+import { shapeClass } from "@flixlix-cards/shared/const/shapes";
 
 export const gridElement = (
   main: CardMainContext,
@@ -20,7 +21,7 @@ export const gridElement = (
   const disableEntityClick = config.clickable_entities === false;
   return html`<div class="circle-container grid">
     <div
-      class="circle ${disableEntityClick ? "pointer-events-none" : ""}"
+      class="circle ${disableEntityClick ? "pointer-events-none" : ""} ${shapeClass(config.entities.grid)}"
       @click=${(e: MouseEvent) => {
         const outageTarget =
           grid.powerOutage?.entityGenerator ?? entities.grid?.power_outage?.entity;

@@ -5,6 +5,7 @@ import {
 } from "@flixlix-cards/shared/types";
 import { displayValue } from "@flixlix-cards/shared/utils/display-value";
 import { html, nothing } from "lit";
+import { shapeClass } from "@flixlix-cards/shared/const/shapes";
 
 export const batteryElement = (
   main: CardMainContext,
@@ -20,7 +21,7 @@ export const batteryElement = (
   const disableEntityClick = config.clickable_entities === false;
   return html`<div class="circle-container battery">
     <div
-      class="circle ${disableEntityClick ? "pointer-events-none" : ""}"
+      class="circle ${disableEntityClick ? "pointer-events-none" : ""} ${shapeClass(config.entities.battery)}"
       @click=${(e: MouseEvent) => {
         const target = entities.battery?.state_of_charge
           ? entities.battery?.state_of_charge

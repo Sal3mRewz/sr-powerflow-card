@@ -16,6 +16,7 @@ import { html, nothing, svg } from "lit";
 import { styleMap } from "lit/directives/style-map.js";
 import { spacer } from "./spacer";
 import { individualSecondarySpan } from "./spans/individual-secondary-span";
+import { shapeClass } from "@flixlix-cards/shared/const/shapes";
 
 /** Default colours for second feed devices, used in order when a device has no colour set. */
 const SECOND_FEED_DEVICE_COLORS = ["#5bd08a", "#c25bd0", "#d05b6e", "#5b7bd0"];
@@ -71,7 +72,7 @@ export const secondFeedElement = (
         </svg>`
       : html`<svg width="80" height="30"></svg>`}
     <div
-      class="circle ${disableEntityClick ? "pointer-events-none" : ""}"
+      class="circle ${disableEntityClick ? "pointer-events-none" : ""} ${shapeClass(field)}"
       @click=${(e: MouseEvent) => {
         main.onEntityClick(e, field, secondFeed.entity);
       }}
@@ -161,7 +162,7 @@ const secondFeedDeviceElement = (
         </svg>`
       : html`<svg width="80" height="30"></svg>`}
     <div
-      class="circle ${disableEntityClick ? "pointer-events-none" : ""}"
+      class="circle ${disableEntityClick ? "pointer-events-none" : ""} ${shapeClass(device.field)}"
       @click=${(e: MouseEvent) => {
         main.onEntityClick(e, device.field, device.entity);
       }}

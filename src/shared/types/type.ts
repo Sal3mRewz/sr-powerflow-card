@@ -1,3 +1,4 @@
+import { type ShapeName } from "@flixlix-cards/shared/const/shapes";
 import { type ActionConfig, type HomeAssistant } from "custom-card-helpers";
 import { type TemplateResult } from "lit";
 
@@ -64,6 +65,8 @@ export interface BaseConfigEntity extends ActionConfigSet {
   use_metadata?: boolean;
   secondary_info?: SecondaryInfoType;
   invert_state?: boolean;
+  /** Draw this entity as a shape instead of a circle. Leave out for a circle. */
+  shape?: ShapeName;
 }
 
 export type GridPowerOutage = {

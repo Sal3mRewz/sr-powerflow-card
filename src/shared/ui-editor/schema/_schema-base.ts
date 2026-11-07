@@ -181,6 +181,21 @@ const batteryOrGridMainConfigSchema = [
   },
 ] as const;
 
+// Draw the entity as a shape instead of a circle. Leaving it out keeps the circle.
+export const shapeSchema = {
+  name: "shape",
+  selector: {
+    select: {
+      mode: "dropdown",
+      options: [
+        { value: "circle", label: "Circle" },
+        { value: "house", label: "House" },
+        { value: "car", label: "Car" },
+      ],
+    },
+  },
+};
+
 export function getBaseMainConfigSchema(field?: string) {
   const result: any = {
     type: "grid",
@@ -188,6 +203,7 @@ export function getBaseMainConfigSchema(field?: string) {
     schema: [
       { name: "name", selector: { text: {} } },
       { name: "icon", selector: { icon: {} } },
+      shapeSchema,
     ],
   };
   if (field === "battery" || field === "grid") {

@@ -65,6 +65,7 @@
     "power_outage": "Power Outage",
     "production": "Production",
     "secondary_info": "Secondary Info",
+    "shape": "Shape",
     "separated": "Separated Entities (One entity for consumption and one for production)",
     "show": "Show",
     "show_direction": "Show Direction",

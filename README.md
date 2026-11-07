@@ -4,7 +4,7 @@ A Home Assistant Lovelace power flow card. It is a fork of
 [Power Flow Card Plus](https://github.com/flixlix/power-flow-card-plus) by
 [@flixlix](https://github.com/flixlix), based on upstream **v0.3.7**.
 
-Current version: **0.5.0**
+Current version: **0.6.0**
 
 ## How it differs from upstream
 
@@ -83,6 +83,39 @@ entities:
         name: Workshop
 ```
 
+### Shapes
+
+Any entity can be drawn as a shape instead of a circle. Add `shape` to the entities you want
+to change. Anything without it stays a circle. In the visual editor it's the **Shape** dropdown on
+each entity's page.
+
+| `shape` | Looks like |
+| --- | --- |
+| `circle` | A circle (the default) |
+| `house` | A house with a chimney |
+| `car` | A car seen from the side, with windows and wheels |
+
+```yaml
+entities:
+  home:
+    shape: house       # the coloured split of where power comes from follows the house outline
+  grid:
+    entity: sensor.grid_power
+  individual:
+    - entity: sensor.ev_charger_power
+      name: EV
+      shape: car
+  second_feed:
+    entity: sensor.second_feed_power
+    shape: house
+    individual:
+      - entity: sensor.workshop_power
+        shape: car     # second feed devices can have shapes too
+```
+
+Shapes use the same colours as circles, and the flow lines still meet them in the middle of
+each side.
+
 All other configuration options are the same as upstream. See the
 [Power Flow Card Plus documentation](https://github.com/flixlix/power-flow-card-plus#readme)
 for the full reference.
@@ -115,6 +148,8 @@ What this fork changes from upstream v0.3.7:
 - Combined entities (`sensor.a|sensor.b`) are summed with each entity's own unit, and count
   as available while any of them is: `src/shared/states/utils/`.
 - Element names use `sr-` so the card installs alongside the original.
+- Optional shapes (`shape:`): `src/shared/const/shapes.ts`, used by every entity's element in
+  `src/shared/components/`.
 
 ## Credits
 

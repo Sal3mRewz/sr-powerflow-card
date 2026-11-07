@@ -14,6 +14,7 @@ import { showLine } from "@flixlix-cards/shared/utils/show-line";
 import { styleLine } from "@flixlix-cards/shared/utils/style-line";
 import { html, nothing, svg, type TemplateResult } from "lit";
 import { generalSecondarySpan } from "./spans/general-secondary-span";
+import { shapeClass } from "@flixlix-cards/shared/const/shapes";
 
 interface NonFossil {
   newDur: NewDur;
@@ -34,7 +35,7 @@ export const nonFossilElement = (
   return html`<div class="circle-container low-carbon">
     <span class="label">${nonFossil.name}</span>
     <div
-      class="circle ${disableEntityClick ? "pointer-events-none" : ""}"
+      class="circle ${disableEntityClick ? "pointer-events-none" : ""} ${shapeClass(config.entities.fossil_fuel_percentage)}"
       @click=${(e: MouseEvent) => {
         main.onEntityClick(
           e,
