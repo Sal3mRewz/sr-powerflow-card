@@ -1,0 +1,15 @@
+{
+  "name": "sr-powerflow-card",
+  "private": true,
+  "version": "0.3.7-fd.2",
+  "type": "module",
+  "description": "A Home Assistant power flow card (fork of Power Flow Card Plus, registered as power-flow-card-plus-fd)",
+  "keywords": ["home-assistant", "homeassistant", "hass", "dashboard", "custom-cards"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sal3mRewz/sr-powerflow-card.git"
+  },
+  "author": "Sal3mRewz",
+  "license": "MIT",
+  "homepage": "https://github.com/Sal3mRewz/sr-powerflow-card#readme"
+}
