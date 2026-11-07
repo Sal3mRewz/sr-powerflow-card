@@ -1,7 +1,7 @@
 {
   "name": "sr-powerflow-card",
   "private": true,
-  "version": "0.4.0",
+  "version": "0.5.0",
   "type": "module",
   "description": "A Home Assistant power flow card (fork of Power Flow Card Plus, registered as sr-powerflow-card)",
   "keywords": ["home-assistant", "homeassistant", "hass", "dashboard", "custom-cards"],

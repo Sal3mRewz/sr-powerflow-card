@@ -4,11 +4,11 @@ A Home Assistant Lovelace power flow card. It is a fork of
 [Power Flow Card Plus](https://github.com/flixlix/power-flow-card-plus) by
 [@flixlix](https://github.com/flixlix), based on upstream **v0.3.7**.
 
-Current version: **0.4.0**
+Current version: **0.5.0**
 
 ## How it differs from upstream
 
-- Supports a **second home** fed from the grid.
+- Supports a **second feed** from the grid.
 - Supports **combined grid entities**.
 - Installs **alongside** the original card (see below).
 
@@ -26,8 +26,9 @@ installed **alongside** the original Power Flow Card Plus without conflicts:
 
 It shows up in the card picker as **SR Power Flow Card**.
 
-> **Upgrading to 0.4.0:** the card type is now `custom:sr-powerflow-card`.
-> Update the `type:` line in each dashboard card that uses this card.
+> **Upgrading to 0.5.0:** the card type is `custom:sr-powerflow-card` (since
+> 0.4.0), and the second feed is configured under `second_feed` (since 0.5.0).
+> Update both in each dashboard card that uses this card.
 
 ## Installation
 
@@ -61,7 +62,28 @@ entities:
     state_of_charge: sensor.battery_soc
 ```
 
-All configuration options are the same as upstream. See the
+### Second feed
+
+A second supply from the grid, shown below the home circle. Set either a single
+`entity`, or a list of `entities` whose power is summed. Add `individual` devices
+to show what the second feed is powering.
+
+```yaml
+entities:
+  second_feed:
+    entity: sensor.second_feed_power
+    name: Second Feed            # optional, default "Second Feed"
+    icon: mdi:meter-electric-outline  # optional
+    color: "#488fc2"             # optional
+    display_zero: true           # optional
+    display_zero_tolerance: 0    # optional
+    inverted_animation: false    # optional
+    individual:                  # optional devices fed by the second feed
+      - entity: sensor.workshop_power
+        name: Workshop
+```
+
+All other configuration options are the same as upstream. See the
 [Power Flow Card Plus documentation](https://github.com/flixlix/power-flow-card-plus#readme)
 for the full reference.
 
