@@ -87,6 +87,35 @@ All other configuration options are the same as upstream. See the
 [Power Flow Card Plus documentation](https://github.com/flixlix/power-flow-card-plus#readme)
 for the full reference.
 
+## Development
+
+The card is written in TypeScript with [Lit](https://lit.dev/). Building needs Node.js 22 or later.
+
+```sh
+npm install
+npm run build      # writes sr-powerflow-card.js, the file HACS installs (commit it)
+npm run dev        # rebuilds on change and serves http://<host>:5001/sr-powerflow-card.js
+npm test
+npm run typecheck
+```
+
+Layout:
+
+- `src/sr-powerflow-card.ts`: the card.
+- `src/ui-editor/`: the visual editor.
+- `src/shared/`: upstream's shared card code, kept in upstream's layout and import paths
+  (`@flixlix-cards/shared/...`) so it is easy to compare with
+  [flixlix-cards](https://github.com/flixlix/flixlix-cards) and take in upstream fixes.
+
+What this fork changes from upstream v0.3.7:
+
+- Second feed: `src/shared/states/raw/second-feed.ts` (its power) and
+  `src/shared/components/second-feed.ts` (the circle and its device row), plus styles in
+  `src/shared/style/index.ts` and the editor page in `src/ui-editor/ui-editor.ts`.
+- Combined entities (`sensor.a|sensor.b`) are summed with each entity's own unit, and count
+  as available while any of them is: `src/shared/states/utils/`.
+- Element names use `sr-` so the card installs alongside the original.
+
 ## Credits
 
 All credit for the original card goes to [@flixlix](https://github.com/flixlix) and the
