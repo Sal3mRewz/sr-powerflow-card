@@ -4,7 +4,7 @@ A Home Assistant Lovelace power flow card. It is a fork of
 [Power Flow Card Plus](https://github.com/flixlix/power-flow-card-plus) by
 [@flixlix](https://github.com/flixlix), based on upstream **v0.3.7**.
 
-Current version: **0.3.7-fd.2**
+Current version: **0.4.0**
 
 ## How it differs from upstream
 
@@ -12,19 +12,22 @@ Current version: **0.3.7-fd.2**
 - Supports **combined grid entities**.
 - Installs **alongside** the original card (see below).
 
-The card and its editor elements are registered under `-fd` names, so it can be
+The card and its editor elements are registered under their own names, so it can be
 installed **alongside** the original Power Flow Card Plus without conflicts:
 
 | Upstream element | This card |
 | --- | --- |
-| `power-flow-card-plus` | `power-flow-card-plus-fd` |
-| `power-flow-card-plus-editor` | `power-flow-card-plus-fd-editor` |
-| `individual-devices-editor` | `individual-devices-editor-fd` |
-| `individual-row-editor` | `individual-row-editor-fd` |
-| `link-subpage` | `link-subpage-fd` |
-| `subpage-header` | `subpage-header-fd` |
+| `power-flow-card-plus` | `sr-powerflow-card` |
+| `power-flow-card-plus-editor` | `sr-powerflow-card-editor` |
+| `individual-devices-editor` | `sr-individual-devices-editor` |
+| `individual-row-editor` | `sr-individual-row-editor` |
+| `link-subpage` | `sr-link-subpage` |
+| `subpage-header` | `sr-subpage-header` |
 
-It shows up in the card picker as **Power Flow Card Plus FD**.
+It shows up in the card picker as **SR Power Flow Card**.
+
+> **Upgrading to 0.4.0:** the card type is now `custom:sr-powerflow-card`.
+> Update the `type:` line in each dashboard card that uses this card.
 
 ## Installation
 
@@ -47,7 +50,7 @@ It shows up in the card picker as **Power Flow Card Plus FD**.
 ## Usage
 
 ```yaml
-type: custom:power-flow-card-plus-fd
+type: custom:sr-powerflow-card
 entities:
   grid:
     entity: sensor.grid_power

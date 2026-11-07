@@ -1,5 +1,5 @@
 {
-  "name": "SR Power Flow Card (Power Flow Card Plus FD)",
+  "name": "SR Power Flow Card",
   "render_readme": true,
   "homeassistant": "2023.12.3",
   "filename": "sr-powerflow-card.js"
